@@ -2,7 +2,7 @@ import {asyncHandler} from '../utils/asyncHandler.js'
 import {ApiError} from "../utils/ApiError.js"
 import { User } from '../models/user.model.js'
 import { uploadOnCloudinary, deleteFromCloudinary} from '../utils/Cloudinary.js'
-import { upload } from '../middlewares/multer.middleware.js'
+import mongoose from 'mongoose'
 import { ApiResponse } from '../utils/ApiResponse.js'
 import jwt from "jsonwebtoken"
 
@@ -264,6 +264,7 @@ const getCurrentUser = asyncHandler( async(req, res) =>{
 
 const updateAccountDetails = asyncHandler( async(req, res) =>{
     const {fullname, email} = req.body
+    console.log("email: "+email)
 
     if(!fullname || !email){
         throw new ApiError(400, "All fields are required")
@@ -288,14 +289,14 @@ const updateAccountDetails = asyncHandler( async(req, res) =>{
 })
 
 const updateAvatar = asyncHandler( async(req, res)=>{
-    const newFilePath = req.file?.path;
+    const newFile = req.file?.path;
 
     if(!newFile){
         throw new ApiError(400, "No file received")
     }
 
 
-    const avatar = await uploadOnCloudinary(newFilePath);
+    const avatar = await uploadOnCloudinary(newFile);
 
     if(!avatar.url){
         throw new ApiError(500, "Error while uploading the avatar")
@@ -328,9 +329,9 @@ const updateCoverImage = asyncHandler( async(req, res) =>{
 
     const user = await User.findById(req.user._id).select("-password")
 
-    await deleteFromCloudinary(user.avatar)
+    await deleteFromCloudinary(user.coverImage)
 
-    user.avatar = avatar.url
+    user.coverImage = coverImage.url
     await user.save({ validateBeforeSave:false })
 
     res
