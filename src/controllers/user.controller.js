@@ -98,7 +98,7 @@ const registerUser = asyncHandler( async (req, res) => {
     }
 
     return res.status(201).json(
-        new ApiResponse(200, createdUser, "User registered successfully")
+        new ApiResponse(201, createdUser, "User registered successfully")
     )
 })
 
@@ -304,7 +304,7 @@ const updateAvatar = asyncHandler( async(req, res)=>{
 
     const user = await User.findById(req.user._id).select("-password")
 
-    deleteFromCloudinary(user.avatar)
+    await deleteFromCloudinary(user.avatar)
 
     user.avatar = avatar.url
     await user.save({ validateBeforeSave:false })
@@ -330,6 +330,7 @@ const updateCoverImage = asyncHandler( async(req, res) =>{
     const user = await User.findById(req.user._id).select("-password")
 
     await deleteFromCloudinary(user.coverImage)
+    
 
     user.coverImage = coverImage.url
     await user.save({ validateBeforeSave:false })

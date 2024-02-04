@@ -28,13 +28,29 @@ const uploadOnCloudinary = async(localFilePath) => {
 const deleteFromCloudinary = async(fileUrl) =>{
   try{
     const response = await cloudinary.uploader.destroy(fileUrl, {
-      resource_type: 'auto'
+      resource_type: 'image'
     })
     return response
 
   } catch(error){
+    console.error(error)
     return null
   }
 }
 
-export {uploadOnCloudinary, deleteFromCloudinary}
+const deleteVideoFromCloudinary = async(fileUrl) =>{
+  try{
+    const response = await cloudinary.uploader.destroy(fileUrl, {
+      resource_type: 'video'
+    })
+    return response
+
+  } catch(error){
+    console.error(error)
+    return null
+  }
+}
+
+
+
+export {uploadOnCloudinary, deleteFromCloudinary, deleteVideoFromCloudinary}
