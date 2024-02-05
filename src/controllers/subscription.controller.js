@@ -1,4 +1,4 @@
-import mongoose, {isValidObjectId} from "mongoose"
+import mongoose from "mongoose"
 import { User } from "../models/user.model.js"
 import { Subscription } from "../models/subscription.model.js"
 import {ApiError} from "../utils/ApiError.js"
@@ -55,7 +55,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     if(user._id.toString() === channelId.toString()){
         throw new ApiError(400, "Self subscription not possible")
     }
-    
+
     const newSubscription = await Subscription.create({
         subscriber: user._id,
         channel: channelId
