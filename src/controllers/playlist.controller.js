@@ -79,7 +79,11 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Playlist does not exist")
     }
 
-    const video = await Video.findById(videoId)
+    const video = await Video.findById(videoId).select({
+        thumbnail: 1,
+        title: 1,
+        _id: 1
+      })
 
     if(!video){
         throw new ApiError(400, "Video does not exist")
@@ -120,7 +124,9 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     }
 
     const initialLength = playlist.videos.length;
-    playlist.videos.pop(video)
+
+    const index = playlist.videos.indexOf(video._id)
+    playlist.videos.splice(index, 1)
 
     if(initialLength === playlist.videos.length){
         throw new ApiError(400, "Failed to remove the video")
@@ -130,7 +136,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
 
     return res
     .status(200)
-    .json( new ApiResponse(200, playlist.videos, "Video added successfully")) 
+    .json( new ApiResponse(200, playlist.videos, "Video removed successfully")) 
 })
 
 const deletePlaylist = asyncHandler(async (req, res) => {
