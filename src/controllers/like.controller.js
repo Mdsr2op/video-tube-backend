@@ -124,8 +124,6 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 )
 
 const getLikedVideos = asyncHandler(async (req, res) => {
-    //TODO: get all liked videos
-
 
     const likedVideos = await Like.aggregate([
         {
@@ -164,8 +162,6 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         }
       ])
 
-      console.log("hahahha+")
-      console.log(likedVideos)
       if(typeof likedVideos === undefined ){
         throw new ApiError(400, "Could not fetch liked vidoes")
       }
