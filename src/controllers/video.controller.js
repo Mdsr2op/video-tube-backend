@@ -8,7 +8,7 @@ import { uploadOnCloudinary, deleteFromCloudinary, deleteVideoFromCloudinary} fr
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, query, sortBy, sortType } = req.query
+    const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
     //TODO: get all videos based on query, sort, pagination
     
     const options = {
@@ -20,7 +20,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         [
             {
                 $match:{
-                    "owner": new mongoose.Types.ObjectId(req.user._id)
+                    "owner": new mongoose.Types.ObjectId(userId)
                 }
             },
             {
