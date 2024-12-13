@@ -67,6 +67,8 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError(400, "Avatar file is required")
     }
 
+    console.log(req.files.avatar[0]);
+
     let coverImageLocalPath;
     const coverImageExists = req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0;
     if(coverImageExists){
@@ -79,6 +81,8 @@ const registerUser = asyncHandler( async (req, res) => {
     if(!avatar){
         throw new ApiError(500, "Error encountered while uploading the avatar file")
     }
+
+    
 
     const user = await User.create({
         fullname,
@@ -97,8 +101,13 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError(500, "Something went wrong while registering the user")
     }
 
+    const fileBytes = {
+        coverImageSize: coverImage.bytes,
+        avatarSize: avatar.bytes
+    }
+
     return res.status(201).json(
-        new ApiResponse(201, createdUser, "User registered successfully")
+        new ApiResponse(201, createdUser, "User registered successfully", fileBytes )
     )
 })
 
@@ -200,11 +209,11 @@ const refreshAccessToken = asyncHandler( async(req, res) =>{
 
     const user = await User.findById(decodedToken?._id)
     if(!user){
-        throw new ApiError(401, "Invalid refresh token")
+        throw new ApiError(403, "Invalid refresh token")
     }
 
     if(incomingRequest !== user?.refreshToken ){
-        throw new ApiError(401, "Refresh token used or expired")
+        throw new ApiError(403, "Refresh token used or expired")
     }
 
     const accessToken = user.generateAccessToken()
@@ -321,6 +330,7 @@ const updateCoverImage = asyncHandler( async(req, res) =>{
         throw new ApiError(400, "Image not found")
     }
 
+    console.log(newImage);
     const coverImage = await uploadOnCloudinary(newImage)
 
     if(!coverImage.url){

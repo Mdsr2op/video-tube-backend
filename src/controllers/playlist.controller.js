@@ -79,6 +79,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Playlist does not exist")
     }
 
+
     const video = await Video.findById(videoId).select({
         thumbnail: 1,
         title: 1,

@@ -8,6 +8,11 @@ dotenv.config({
 
 const PORT = process.env.PORT || 4000;
 
+app.get("/", (req, res) =>
+    res.json({
+      message: "Hello from Express Server 👋🏻",
+    })
+  );
 connectDB()
 .then(() => {
     app.listen(PORT, () =>{
