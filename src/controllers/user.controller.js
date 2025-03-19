@@ -5,6 +5,7 @@ import { uploadOnCloudinary, deleteFromCloudinary} from '../utils/Cloudinary.js'
 import mongoose from 'mongoose'
 import { ApiResponse } from '../utils/ApiResponse.js'
 import jwt from "jsonwebtoken"
+import { deleteCache } from '../config/redis.js'
 
 const generateAccessAndRefreshToken = async(userId) =>{
     try {
@@ -298,6 +299,10 @@ const updateAccountDetails = asyncHandler( async(req, res) =>{
         }
     ).select("-password")
 
+    // Invalidate user-related caches
+    await deleteCache(`cache:/api/v1/users/current-user`)
+    await deleteCache(`cache:/api/v1/users/c/${user.username}`)
+
     return res
     .status(200)
     .json(new ApiResponse(200, user, "Account details updated successfully"))
@@ -309,7 +314,6 @@ const updateAvatar = asyncHandler( async(req, res)=>{
     if(!newFile){
         throw new ApiError(400, "No file received")
     }
-
 
     const avatar = await uploadOnCloudinary(newFile);
 
@@ -323,6 +327,10 @@ const updateAvatar = asyncHandler( async(req, res)=>{
 
     user.avatar = avatar.url
     await user.save({ validateBeforeSave:false })
+
+    // Invalidate user-related caches
+    await deleteCache(`cache:/api/v1/users/current-user`)
+    await deleteCache(`cache:/api/v1/users/c/${user.username}`)
 
     res
     .status(200)
@@ -347,9 +355,12 @@ const updateCoverImage = asyncHandler( async(req, res) =>{
 
     await deleteFromCloudinary(user.coverImage)
     
-
     user.coverImage = coverImage.url
     await user.save({ validateBeforeSave:false })
+
+    // Invalidate user-related caches
+    await deleteCache(`cache:/api/v1/users/current-user`)
+    await deleteCache(`cache:/api/v1/users/c/${user.username}`)
 
     res
     .status(200)
