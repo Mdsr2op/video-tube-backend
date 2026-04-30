@@ -1,0 +1,29 @@
+# Version control
+.git
+.gitignore
+
+# Dependencies — installed fresh inside the image
+node_modules
+npm-debug.log
+
+# Environment files — secrets come from K8s, not the image
+.env
+.env.*
+!.env.sample
+
+# Editor / OS noise
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist
+build
+coverage
+*.log
+
+# CI / k8s files (live in env repo, not in image)
+cloudbuild.yaml
+k8s
+*.md
