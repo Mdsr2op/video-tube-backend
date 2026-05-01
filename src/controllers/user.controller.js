@@ -476,6 +476,17 @@ const getWatchHistory = asyncHandler( async(req, res) =>{
     )
 })
 
+const getServerInfo = asyncHandler( async(req, res) => {
+    return res
+    .status(200)
+    .json(new ApiResponse(200, {
+        service: "video-tube-backend",
+        version: "1.0.0",
+        environment: process.env.NODE_ENV || "development",
+        uptime: Math.floor(process.uptime()) + "s"
+    }, "Server info fetched successfully"))
+})
+
 export {
     registerUser,
     loginUser,
@@ -487,5 +498,6 @@ export {
     updateAvatar,
     updateCoverImage,
     getChannelProfile,
-    getWatchHistory
+    getWatchHistory,
+    getServerInfo
     }
