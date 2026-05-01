@@ -86,7 +86,7 @@ steps:
         #   image: <AR_REGION>-docker.pkg.dev/<PROJECT_ID>/<REPO>/<IMAGE>:TAG
         # We replace whatever tag is there with the new $SHORT_SHA.
         NEW_IMAGE="${_AR_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_IMAGE_NAME}:${SHORT_SHA}"
-        sed -i -E "s|image: ${_AR_REGION}-docker\.pkg\.dev/${PROJECT_ID}/${_AR_REPO}/${_IMAGE_NAME}:[^[:space:]]+|image: ${NEW_IMAGE}|g" k8s/deployment.yaml
+        sed -i -E "s|image: ${_AR_REGION}-docker\.pkg\.dev/${PROJECT_ID}/${_AR_REPO}/${_IMAGE_NAME}:[^[:space:]]+|image: $$NEW_IMAGE|g" k8s/deployment.yaml
 
         # If sed produced no diff, exit cleanly — nothing to commit.
         if git diff --quiet; then
