@@ -31,7 +31,7 @@ substitutions:
 # as an env var named GITHUB_PAT inside the steps that need it.
 availableSecrets:
   secretManager:
-    - versionName: projects/$PROJECT_ID/secrets/github-pat/versions/latest
+    - versionName: projects/576198350234/secrets/github-pat/versions/latest
       env: GITHUB_PAT
 
 steps:
